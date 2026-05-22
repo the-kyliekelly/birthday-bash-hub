@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kylie's Birthday Bash - Contributor Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Raleway:wght@300;400;500;600;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family:'Raleway',sans-serif;
+  background:#FEF5F8;
+  color:#2A0E1A;
+  line-height:1.6;
+  overflow-x:hidden;
+}
+body::before {
+  content:'';
+  position:fixed; inset:0;
+  background-image:
+    radial-gradient(circle at 8% 12%, rgba(232,69,122,0.35) 0.7px, transparent 1.5px),
+    radial-gradient(circle at 93% 22%, rgba(201,153,58,0.3) 0.6px, transparent 1.2px),
+    radial-gradient(circle at 37% 78%, rgba(232,69,122,0.25) 0.5px, transparent 1px),
+    radial-gradient(circle at 71% 91%, rgba(201,153,58,0.28) 0.6px, transparent 1.2px),
+    radial-gradient(circle at 55% 40%, rgba(232,69,122,0.2) 0.4px, transparent 0.9px),
+    radial-gradient(circle at 20% 95%, rgba(201,153,58,0.22) 0.5px, transparent 1px),
+    radial-gradient(circle at 85% 55%, rgba(232,69,122,0.25) 0.5px, transparent 1px);
+  background-size:220px 220px;
+  opacity:0.6;
+  pointer-events:none;
+  z-index:0;
+}
+#confetti-canvas { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:9999; display:none; }
+.container { max-width:960px; margin:0 auto; padding:0 1.5rem 4rem; position:relative; z-index:1; }
+
+/* HERO */
+.hero {
+  text-align:center;
+  padding:3rem 2rem 2.5rem;
+  background:transparent;
+  position:relative;
+  overflow:hidden;
+  margin-bottom:0;
+}
+.hero-dot {
+  position:absolute;
+  border-radius:50%;
+  pointer-events:none;
+}
+.hero .eyebrow {
+  font-family:'Courier Prime',monospace;
+  font-size:10.5px; letter-spacing:0.3em; text-transform:uppercase;
+  color:#C9993A; margin-bottom:0.75rem;
+  position:relative; z-index:1;
+}
+.logo-text {
+  font-family:'Playfair Display',serif;
+  font-size:clamp(38px,7vw,72px);
+  font-weight:700; letter-spacing:-0.01em;
+  background:linear-gradient(90deg, #8B6914 0%, #C9993A 20%, #F0CC7A 40%, #FFF5C0 50%, #F0CC7A 60%, #C9993A 80%, #8B6914 100%);
+  background-size:200% 100%;
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text;
+  animation:shimmer 3s linear infinite;
+  line-height:1.1; margin-bottom:0.4rem;
+  position:relative; z-index:1;
+}
+@keyframes shimmer { 0%{background-position:100% 0} 100%{background-position:-100% 0} }
+.gold-divider {
+  width:100px; height:1px;
+  background:linear-gradient(90deg,transparent,#C9993A,transparent);
+  margin:1rem auto;
+  position:relative; z-index:1;
+}
+.hero .tagline {
+  font-size:14.5px; color:rgba(42,14,26,0.72);
+  max-width:520px; margin:0 auto; line-height:1.8;
+  position:relative; z-index:1;
+}
+.hero .tagline strong { color:#C42060; font-weight:600; }
+.hero .eyebrow { color:#E8457A; font-size:12px; letter-spacing:0.28em; }
+
+/* TABS */
+.tab-nav {
+  position:sticky; top:0;
+  background:rgba(254,245,248,0.96);
+  backdrop-filter:blur(8px);
+  padding:0.75rem 0 0.875rem;
+  margin:0 0 2rem;
+  display:flex; gap:0.45rem; flex-wrap:wrap; justify-content:center;
+  z-index:10;
+  border-bottom:1px solid rgba(232,69,122,0.18);
+}
+.tab-btn {
+  background:transparent;
+  border:1px solid rgba(196,32,96,0.3);
+  color:rgba(42,14,26,0.6);
+  padding:8px 16px; border-radius:30px;
+  font-family:'Courier Prime',monospace;
+  font-size:10.5px; font-weight:700;
+  letter-spacing:0.12em; text-transform:uppercase;
+  cursor:pointer; transition:all 0.2s;
+}
+.tab-btn:hover { border-color:#E8457A; color:#E8457A; }
+.tab-btn.active { background:#E8457A; color:white; border-color:#E8457A; box-shadow:0 3px 12px rgba(232,69,122,0.3); }
+.tab-content { display:none; }
+.tab-content.active { display:block; animation:fadeUp 0.3s ease; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+/* SECTION HEADERS */
+.section-header { display:flex; align-items:baseline; gap:0.875rem; margin:2.5rem 0 1.25rem; }
+.section-header .num { font-family:'Playfair Display',serif; font-style:italic; font-size:50px; line-height:1; color:rgba(232,69,122,0.15); }
+.section-header h2 { font-family:'Playfair Display',serif; font-style:italic; font-size:clamp(24px,4vw,34px); color:#C42060; }
+.section-intro { margin-bottom:1.75rem; color:rgba(42,14,26,0.65); font-size:14px; line-height:1.8; max-width:680px; }
+
+/* CARDS */
+.card { background:#fff; border:1px solid rgba(232,69,122,0.15); border-radius:16px; padding:1.75rem 2rem; margin-bottom:1.75rem; }
+.card-gold { border-color:rgba(201,153,58,0.35); }
+
+/* BUNDLE GRID */
+.bundle-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(185px,1fr)); gap:1.25rem 2rem; margin-top:1.25rem; }
+.bundle-grid .item { border-left:2px solid #E8457A; padding-left:0.9rem; }
+.bundle-grid .lbl { font-family:'Courier Prime',monospace; font-size:9.5px; letter-spacing:0.2em; text-transform:uppercase; color:#C9993A; font-weight:700; margin-bottom:4px; }
+.bundle-grid .val { font-family:'Playfair Display',serif; font-size:16px; color:#2A0E1A; font-weight:500; line-height:1.35; }
+
+/* PARTY BAGS */
+.party-bags { display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; margin-bottom:1.75rem; }
+@media(max-width:580px){.party-bags{grid-template-columns:1fr;}}
+.party-bag { background:#fff; border:1px solid rgba(232,69,122,0.15); border-radius:14px; padding:1.4rem 1.5rem; }
+.party-bag.vip { border-color:rgba(201,153,58,0.4); background:linear-gradient(135deg,#fff 0%,#FEF8EE 100%); }
+.bag-type { font-family:'Courier Prime',monospace; font-size:9.5px; letter-spacing:0.22em; text-transform:uppercase; color:#C9993A; font-weight:700; margin-bottom:5px; }
+.party-bag h3 { font-family:'Playfair Display',serif; font-style:italic; font-size:20px; color:#C42060; margin-bottom:0.4rem; }
+.party-bag p { font-size:13px; line-height:1.6; color:rgba(42,14,26,0.7); }
+.party-bag .price { margin-top:0.6rem; font-family:'Playfair Display',serif; font-size:22px; color:#C9993A; font-weight:700; }
+.coupon-note { font-family:'Courier Prime',monospace; font-size:10.5px; color:rgba(42,14,26,0.6); margin-top:0.5rem; padding:0.5rem 0.75rem; background:#FEF5F8; border-radius:6px; border:1px dashed rgba(232,69,122,0.2); }
+
+/* FORM */
+.form-card { background:#FCE8F0; border-radius:16px; padding:1.75rem; margin-bottom:1.75rem; border:1px solid rgba(232,69,122,0.15); }
+.form-card .row { margin-bottom:1.1rem; }
+.form-card label { display:block; font-family:'Courier Prime',monospace; font-size:13px; letter-spacing:0.12em; text-transform:uppercase; color:#C42060; margin-bottom:7px; font-weight:700; }
+.form-card input, .form-card textarea, .form-card select {
+  width:100%; padding:12px 15px;
+  border:1px solid rgba(196,32,96,0.2);
+  border-radius:10px;
+  background:#fff;
+  font-family:'Raleway',sans-serif;
+  font-size:14px; color:#2A0E1A;
+  transition:border-color 0.2s, box-shadow 0.2s;
+}
+.form-card textarea { min-height:60px; resize:vertical; line-height:1.5; }
+.form-card input:focus,.form-card textarea:focus,.form-card select:focus {
+  outline:none; border-color:#E8457A;
+  box-shadow:0 0 0 3px rgba(232,69,122,0.12);
+}
+.form-card .hint { font-size:11.5px; color:rgba(42,14,26,0.6); margin-top:4px; font-style:italic; }
+.form-card .hint a { color:#E8457A; }
+.form-card select { cursor:pointer; appearance:none; background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3e%3cpath fill='%23C9993A' d='M6 7L0 0h12z'/%3e%3c/svg%3e"); background-repeat:no-repeat; background-position:right 16px center; background-size:11px; padding-right:40px; }
+
+/* GENERATE BTN */
+.generate-wrap { margin-top:1.75rem; text-align:center; }
+.generate-btn {
+  background:linear-gradient(135deg, #C9993A 0%, #F0CC7A 50%, #C9993A 100%);
+  color:#3A1A00; border:none;
+  padding:16px 40px; border-radius:50px;
+  font-family:'Playfair Display',serif; font-style:italic; font-size:21px; font-weight:700;
+  cursor:pointer; transition:transform 0.25s, box-shadow 0.25s;
+  display:inline-flex; align-items:center; gap:12px;
+  box-shadow:0 6px 24px rgba(201,153,58,0.4);
+  letter-spacing:0.01em;
+}
+.generate-btn:hover { transform:translateY(-2px); box-shadow:0 12px 32px rgba(201,153,58,0.55); }
+.generate-btn .icon { font-style:normal; }
+
+/* OUTPUT */
+.swipes-output { display:none; }
+.swipes-output.revealed { display:block; animation:fadeUp 0.5s ease; }
+.success-banner {
+  background:#fff; border:1px solid #E8457A; border-radius:12px;
+  padding:0.9rem 1.4rem; margin:1.75rem 0;
+  display:flex; align-items:center; gap:12px;
+  box-shadow:0 4px 16px rgba(232,69,122,0.1);
+}
+.success-banner .check {
+  background:linear-gradient(135deg,#C42060,#E8457A); color:white;
+  width:32px; height:32px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;
+}
+.success-banner .msg { font-family:'Playfair Display',serif; font-style:italic; font-size:16px; color:#C42060; }
+
+/* SWIPE CARDS */
+.swipe-card { background:#fff; border:1px solid rgba(232,69,122,0.15); border-radius:14px; padding:1.75rem 2rem; margin-bottom:1.4rem; transition:transform 0.2s,box-shadow 0.2s; }
+.swipe-card:hover { transform:translateY(-2px); box-shadow:0 6px 24px rgba(232,69,122,0.1); }
+.swipe-card.ideal { border-color:rgba(201,153,58,0.4); }
+.send-when { font-family:'Courier Prime',monospace; font-size:10px; letter-spacing:0.22em; text-transform:uppercase; color:#E8457A; margin-bottom:7px; font-weight:700; }
+.swipe-card h3 { font-family:'Playfair Display',serif; font-style:italic; font-size:22px; color:#C42060; margin-bottom:5px; line-height:1.2; }
+.swipe-card .goal { font-size:12.5px; color:rgba(42,14,26,0.6); margin-bottom:1.25rem; font-style:italic; }
+.subjects { background:#FEF5F8; border-radius:9px; padding:0.9rem 1.25rem; margin-bottom:1.1rem; border-left:2.5px solid rgba(201,153,58,0.5); }
+.subjects .lbl { font-family:'Courier Prime',monospace; font-size:9.5px; letter-spacing:0.18em; text-transform:uppercase; color:#C9993A; font-weight:700; margin-bottom:7px; }
+.subjects ol { margin-left:1.2rem; font-size:13px; line-height:1.85; color:#2A0E1A; }
+.subjects ol li::marker { color:#E8457A; font-weight:700; }
+.swipe-body, .post-body {
+  background:#FEF5F8; border-radius:9px; padding:1.3rem 1.5rem;
+  font-family:'Courier Prime',monospace; font-size:12.5px; line-height:1.9;
+  white-space:pre-wrap; color:#2A0E1A; border-left:2.5px solid #E8457A;
+}
+.ideal-badge { background:#C9993A; color:#fff; padding:3px 9px; border-radius:4px; font-family:'Courier Prime',monospace; font-size:9.5px; letter-spacing:0.15em; text-transform:uppercase; font-weight:700; display:inline-block; margin-left:7px; vertical-align:middle; }
+.opt-badge { background:#FCE8F0; color:#C42060; border:1px solid rgba(232,69,122,0.3); padding:3px 9px; border-radius:4px; font-family:'Courier Prime',monospace; font-size:9.5px; letter-spacing:0.15em; text-transform:uppercase; font-weight:700; display:inline-block; margin-left:7px; vertical-align:middle; }
+.copy-btn { background:#E8457A; color:white; border:none; padding:9px 20px; border-radius:20px; font-family:'Courier Prime',monospace; font-size:10.5px; letter-spacing:0.14em; text-transform:uppercase; font-weight:700; cursor:pointer; margin-top:10px; transition:all 0.2s; }
+.copy-btn:hover { background:#C42060; transform:translateY(-1px); }
+.copy-btn.copied { background:#C9993A; }
+
+/* CONTRIBUTORS */
+.contributor-card {
+  background:#fff; border:1px solid rgba(232,69,122,0.15); border-radius:12px;
+  padding:1.25rem 1.5rem; margin-bottom:0.875rem;
+  display:grid; grid-template-columns:1fr auto; gap:0.75rem; align-items:start;
+}
+.contributor-card .name { font-family:'Playfair Display',serif; font-weight:700; font-size:16px; color:#C42060; }
+.contributor-card .role { font-size:12px; color:rgba(42,14,26,0.55); margin-bottom:5px; }
+.contributor-card .product-title { font-weight:600; font-size:13.5px; color:#E8457A; margin-bottom:3px; }
+.contributor-card .product-desc { font-size:13px; line-height:1.5; color:rgba(42,14,26,0.68); }
+.bag-tag { padding:3px 11px; border-radius:20px; font-family:'Courier Prime',monospace; font-size:9.5px; letter-spacing:0.13em; text-transform:uppercase; font-weight:700; white-space:nowrap; display:inline-block; margin-bottom:4px; }
+.bag-tag.regular { background:rgba(232,69,122,0.1); color:#C42060; border:1px solid rgba(232,69,122,0.25); }
+.bag-tag.vip-tag { background:rgba(201,153,58,0.12); color:#8B6914; border:1px solid rgba(201,153,58,0.3); }
+
+/* CHECKLIST */
+.checklist { background:#fff; border:1px solid rgba(232,69,122,0.15); border-radius:14px; padding:1.75rem 2rem; margin-bottom:1.75rem; }
+.checklist h3 { font-family:'Playfair Display',serif; font-style:italic; font-size:20px; color:#C42060; margin-bottom:1.1rem; }
+.checklist ul { list-style:none; }
+.checklist li { padding:8px 0 8px 28px; position:relative; font-size:13.5px; border-bottom:1px dashed rgba(232,69,122,0.12); line-height:1.55; }
+.checklist li:last-child { border-bottom:none; }
+.checklist li::before { content:'✦'; position:absolute; left:0; top:9px; font-size:12px; color:#C9993A; }
+
+/* PARTY HAT */
+.hat-section { background:#fff; border:1px solid rgba(201,153,58,0.35); border-radius:16px; padding:2.25rem 2rem; margin:1.5rem 0; position:relative; overflow:hidden; }
+.hat-section::after { content:'🎉✨🎊'; position:absolute; top:1rem; right:1.5rem; font-size:28px; opacity:0.25; letter-spacing:6px; }
+.hat-section h2 { font-family:'Playfair Display',serif; font-style:italic; font-size:28px; color:#C42060; margin-bottom:0.6rem; }
+.hat-section .intro { color:rgba(42,14,26,0.68); font-size:14px; line-height:1.75; margin-bottom:1.4rem; max-width:540px; }
+.hat-prompt { background:#FEF5F8; border:1px dashed rgba(232,69,122,0.2); border-radius:10px; padding:1.3rem 1.5rem; font-family:'Courier Prime',monospace; font-size:12.5px; line-height:1.85; color:#2A0E1A; white-space:pre-wrap; margin-bottom:1.1rem; }
+
+/* FOOTER */
+footer { text-align:center; padding:2.25rem 1rem 1.25rem; border-top:1px dashed rgba(201,153,58,0.3); margin-top:2.5rem; }
+footer p { font-family:'Playfair Display',serif; font-style:italic; color:#C9993A; font-size:14px; opacity:0.8; }
+footer .small { font-family:'Courier Prime',monospace; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; margin-top:0.6rem; opacity:0.45; font-style:normal; color:#2A0E1A; }
+
+@media(max-width:700px){
+  .container{padding:0 1rem 3rem;}
+  .card,.swipe-card,.checklist,.hat-section{padding:1.3rem 1.1rem;}
+  .form-card{padding:1.3rem 1.1rem;}
+  .contributor-card{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+<div class="container">
+
+<!-- HERO -->
+<header class="hero" id="hero">
+  <p class="eyebrow">Contributor Hub · June 2026</p>
+  <div class="logo-text">Kylie's<br><span style="font-style:italic;font-weight:400;">Birthday Bash</span></div>
+  <div class="gold-divider"></div>
+  <p class="tagline">
+    Welcome, gorgeous contributor! 🎉 We are so glad you're here celebrating with Kylie.
+    <strong>Collaboration is the fastest way to grow</strong> and together we get to grow each other's audiences, share genuinely useful resources with aligned women, and have a whole lot of fun doing it.
+  </p>
+</header>
+
+<!-- TABS -->
+<nav class="tab-nav">
+  <button class="tab-btn active" data-tab="tab-generate" onclick="switchTab('tab-generate')">Generate Swipes</button>
+  <button class="tab-btn" data-tab="tab-bundle" onclick="switchTab('tab-bundle')">Party Info</button>
+  <button class="tab-btn" data-tab="tab-contributors" onclick="switchTab('tab-contributors')">Contributors</button>
+  <button class="tab-btn" data-tab="tab-hat" onclick="switchTab('tab-hat')">Party Hat</button>
+  <button class="tab-btn" data-tab="tab-checklist" onclick="switchTab('tab-checklist')">Checklist</button>
+</nav>
+
+<!-- GENERATE SWIPES -->
+<div class="tab-content active" id="tab-generate">
+  <div class="section-header"><div class="num">01</div><h2>Your Details</h2></div>
+  <p class="section-intro">Fill in your details below and click <strong style="color:#C42060;">Generate My Swipe File</strong> and your personalised email and social swipes appear instantly ✨</p>
+
+  <div class="form-card">
+    <div class="row">
+      <label>Your Name</label>
+      <input type="text" id="signoff" placeholder="e.g. Sarah">
+    </div>
+    <div class="row">
+      <label>Your Product / Contribution Name</label>
+      <input type="text" id="toolname" placeholder="e.g. Screenshot Savvy Mini Training">
+    </div>
+    <div class="row">
+      <label>One-Line Benefit</label>
+      <input type="text" id="benefit" placeholder="e.g. turns customer feedback into credibility-building content that boosts your sales">
+    </div>
+    <div class="row">
+      <label>Your Affiliate Link</label>
+      <input type="text" id="afflink" placeholder="e.g. https://kyliekelly.com/bb-waitlist?ref=yourname">
+      <p class="hint">Don't have yours yet? Sign up as an affiliate at <a href="https://kyliekelly.thrivecart.com/kylies-birthday-bash-2026/partner/" target="_blank">kyliekelly.thrivecart.com/kylies-birthday-bash-2026/partner/</a>. You'll earn 60% ($58.20) on every VIP Party Bag sale through your link 🎉</p>
+    </div>
+    <div class="row">
+      <label>Email Merge Tag</label>
+      <input type="text" id="mergetag" placeholder="e.g. {{first_name}} or [FIRST NAME]">
+    </div>
+    <div class="row">
+      <label>Preferred Send Period</label>
+      <select id="sendday">
+        <option value="waitlist" selected>June 1-14 — Waitlist RSVP</option>
+        <option value="kickoff">June 15-25 — Party Invitation / Kickoff</option>
+        <option value="almostover">June 26-29 — Party is Almost Over</option>
+        <option value="lastcall">June 30 — Last Call, Party Ends</option>
+      </select>
+      <p class="hint">Minimum required: just ONE solo email to your list, anytime in June. Any extra promo is always appreciated!</p>
+    </div>
+    <div class="generate-wrap">
+      <button class="generate-btn" onclick="generateSwipes()">
+        <span class="icon">✨</span>
+        Generate My Swipe File
+        <span class="icon">✨</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="swipes-output" id="swipes-output">
+    <div class="success-banner">
+      <span class="check">✓</span>
+      <span class="msg">Your swipes are ready, <span id="success-name">gorgeous</span>! Scroll down to copy 🎉</span>
+    </div>
+
+    <div class="section-header"><div class="num">02</div><h2>Email Swipes</h2></div>
+    <p class="section-intro"><strong style="color:#E8457A;">Minimum required:</strong> One solo email to your list anytime in June. Everything else below is bonus and Kylie will love you for it 🎀</p>
+
+    <div class="swipe-card">
+      <p class="send-when">June 1-14 · Waitlist Period</p>
+      <h3>Email 1 — RSVP / Coming Soon <span class="opt-badge">Bonus</span></h3>
+      <p class="goal">Goal: Build anticipation and drive waitlist sign-ups before June 15.</p>
+      <div class="subjects">
+        <div class="lbl">Subject Line Options</div>
+        <ol>
+          <li>Get ready for something BIG 🥳</li>
+          <li>Be the first to know about this epic online event...</li>
+          <li>Join the waitlist for Kylie's Birthday Bash - don't miss out!</li>
+          <li>Something exciting is coming and you're going to want in on this ✨</li>
+        </ol>
+      </div>
+      <div class="swipe-body" id="email1" data-template="Hi {{MERGETAG}}!
+
+Guess what? I've got some super exciting news I've been bursting to share!
+
+I'm part of an epic online party that kicks off on June 15 and it is going to be incredible.
+
+It's called Kylie's Birthday Bash. Kylie Kelly is turning 41 and celebrating by bringing together a curated collection of brilliant women in business, each sharing their best trainings, templates, and tools. All free to access!
+
+I'm contributing {{TOOLNAME}} and {{BENEFIT}}.
+
+Whether you're a course creator, coach, or service provider looking to grow and scale, there is something genuinely useful in this party bag for you.
+
+Here's what you need to know:
+🎁 The Regular Party Bag is FREE and packed with products worth $10-$100 each
+👑 The VIP Party Bag is just $97 and has products worth $100-$500 each
+📅 Party opens June 15, resources available until July 15
+
+Jump on the waitlist now and you'll be first through the doors!
+
+Save your spot here: {{AFFLINK}}
+
+{{SIGNOFF}}
+
+P.S. I'm partying with Kylie Kelly to celebrate her 41st birthday and sharing {{TOOLNAME}} along with a brilliant bunch of other contributors 🎂 RSVP today so you're first in!"></div>
+      <button class="copy-btn" onclick="copyText('email1',this)">Copy Email ✦</button>
+    </div>
+
+    <div class="swipe-card ideal">
+      <p class="send-when">⭐ June 15-25 · Party is LIVE</p>
+      <h3>Email 2 — Party Invitation <span class="ideal-badge">Required solo email</span></h3>
+      <p class="goal">Goal: Your one required solo email. Get the click while the energy is high on opening week.</p>
+      <div class="subjects">
+        <div class="lbl">Subject Line Options</div>
+        <ol>
+          <li>It's a party and you're invited!! 🎉</li>
+          <li>It's here... Kylie's Birthday Bash has started!</li>
+          <li>Free gifts inside a birthday party 🎁</li>
+          <li>The doors are open and you're invited!</li>
+        </ol>
+      </div>
+      <div class="swipe-body" id="email2" data-template="Hi {{MERGETAG}}!
+
+Guess what? I'm heading to an epic birthday party and I'd love for you to join me!
+
+Before you tell me you have plans, this party is FULLY ONLINE. Pyjamas are not only allowed, they're encouraged. The perfect party, am I right?!
+
+It's called Kylie's Birthday Bash. Kylie Kelly is celebrating turning 41 by bringing together a curated collection of incredible women in business, each sharing their best stuff. And I'm one of them!
+
+I'm contributing {{TOOLNAME}} and {{BENEFIT}}.
+
+Here's how it works:
+
+🎁 The Regular Party Bag is FREE and packed with digital products ($10-$100 value each)
+👑 The VIP Party Bag is just $97 with products worth $100-$500 each (seriously incredible value)
+📅 Party runs June 15-30, and everything is available until July 15
+
+This isn't a junk drawer of random freebies. It's a thoughtfully curated collection of real trainings, templates, and tools from women I know and trust.
+
+Come join the party here: {{AFFLINK}}
+
+{{SIGNOFF}}
+
+P.S. If you're a scroller (no judgment, so am I), short version: I'm part of Kylie's Birthday Bash, an epic free online event. Grab your spot here: {{AFFLINK}}"></div>
+      <button class="copy-btn" onclick="copyText('email2',this)">Copy Email ✦</button>
+    </div>
+
+    <div class="swipe-card">
+      <p class="send-when">June 26-29 · Almost Over</p>
+      <h3>Email 3 — Party is Almost Over <span class="opt-badge">Bonus</span></h3>
+      <p class="goal">Goal: Urgency nudge for people still on the fence.</p>
+      <div class="subjects">
+        <div class="lbl">Subject Line Options</div>
+        <ol>
+          <li>The party is almost over!! ⏰</li>
+          <li>Have you grabbed your party bag yet?</li>
+          <li>[ENDING SOON] Don't miss out!</li>
+          <li>Kylie's Birthday Bash closes in days...</li>
+        </ol>
+      </div>
+      <div class="swipe-body" id="email3" data-template="Hey {{MERGETAG}},
+
+I'll keep this short because time is almost up!
+
+Have you made it to Kylie's Birthday Bash yet?
+
+We've been having SO much fun but like all good things, this party must come to an end. The doors close June 30.
+
+Quick reminder of what's waiting inside:
+
+🎁 A FREE Regular Party Bag with digital products worth $10-$100 each
+👑 A VIP Party Bag for just $97 with products worth $100-$500 each
+📅 Resources available until July 15 once you're in
+
+I'm contributing {{TOOLNAME}} and {{BENEFIT}}.
+
+Don't miss out: {{AFFLINK}}
+
+{{SIGNOFF}}
+
+P.S. Party closes June 30. Sign up before the music stops! {{AFFLINK}}"></div>
+      <button class="copy-btn" onclick="copyText('email3',this)">Copy Email ✦</button>
+    </div>
+
+    <div class="swipe-card ideal">
+      <p class="send-when">⭐ June 30 · Party Ends Tonight</p>
+      <h3>Email 4 — Last Call, Party Ends <span class="ideal-badge">High-converting</span></h3>
+      <p class="goal">Goal: Final urgency. This is the highest-converting send of any event.</p>
+      <div class="subjects">
+        <div class="lbl">Subject Line Options</div>
+        <ol>
+          <li>Final call for the party bags ⏰</li>
+          <li>Going, going... almost gone!</li>
+          <li>The party power is being switched off tonight 🎉</li>
+          <li>Last chance — Kylie's Birthday Bash closes TODAY</li>
+        </ol>
+      </div>
+      <div class="swipe-body" id="email4" data-template="Hey {{MERGETAG}},
+
+Brief, because the power is about to be unplugged on Kylie's Birthday Bash and the party bags are about to disappear.
+
+ONE LAST CHANCE: {{AFFLINK}}
+
+Before midnight tonight you can grab:
+
+🎁 The FREE Regular Party Bag with digital products worth $10-$100 each
+👑 The VIP Party Bag for just $97, with products worth $100-$500 each
+📅 Resources stay available until July 15 for everyone who signs up today
+
+Including my {{TOOLNAME}} and {{BENEFIT}}.
+
+Don't wake up tomorrow with FOMO: {{AFFLINK}}
+
+{{SIGNOFF}}"></div>
+      <button class="copy-btn" onclick="copyText('email4',this)">Copy Email ✦</button>
+    </div>
+
+    <div class="section-header"><div class="num">03</div><h2>Social Swipes</h2></div>
+    <p class="section-intro">Bonus promo that makes a huge difference and is not required. Even one post goes a long way! 🎀</p>
+
+    <div class="swipe-card ideal">
+      <p class="send-when">⭐ June 15 · Opening Day · IG / Facebook / LinkedIn</p>
+      <h3>Post 1 — Party is OPEN 🎉 <span class="ideal-badge">Best post</span></h3>
+      <div class="post-body" id="post1" data-template="🎉 The party has started and you're invited!
+
+Kylie's Birthday Bash is LIVE and it's completely free.
+
+To celebrate turning 41, Kylie Kelly has brought together a curated collection of incredible women in business, all sharing their best trainings, templates, and tools.
+
+I'm contributing {{TOOLNAME}} and {{BENEFIT}}.
+
+Here's what's waiting for you:
+🎁 A FREE Regular Party Bag with digital products worth $10-$100 each
+👑 A VIP Party Bag for just $97 with products worth $100-$500 (seriously insane value)
+📅 Party open June 15-30, resources available until July 15
+
+Real stuff. From real women. That you'll actually use.
+
+Grab your party bag here: {{AFFLINK}}
+
+#KyliesBirthdayBash #WomenInBusiness #OnlineBusiness #CourseCreators #CollaborationOverCompetition"></div>
+      <button class="copy-btn" onclick="copyText('post1',this)">Copy Post ✦</button>
+    </div>
+
+    <div class="swipe-card">
+      <p class="send-when">Anytime June 15-30 · Short-form / Stories</p>
+      <h3>Post 2 — Short and Sweet ✨ <span class="opt-badge">Bonus</span></h3>
+      <div class="post-body" id="post2" data-template="Free party bag? Yes please! 🎁
+
+Kylie's Birthday Bash is live and I'm contributing {{TOOLNAME}} and {{BENEFIT}}.
+
+Free curated resources from brilliant women in business, plus a $97 VIP bag with seriously incredible value.
+
+Grab your spot before June 30: {{AFFLINK}} 🎉"></div>
+      <button class="copy-btn" onclick="copyText('post2',this)">Copy Post ✦</button>
+    </div>
+
+    <div class="swipe-card">
+      <p class="send-when">June 28-30 · Closing Push <span class="opt-badge">Bonus</span></p>
+      <h3>Post 3 — Last Call 🎀</h3>
+      <div class="post-body" id="post3" data-template="Last call! 🎉 Kylie's Birthday Bash closes June 30.
+
+My {{TOOLNAME}} is inside and {{BENEFIT}}.
+
+Free to grab. Party closes in hours. Resources available until July 15 once you're in.
+
+Go get it: {{AFFLINK}}
+
+#KyliesBirthdayBash #WomenInBusiness #FreeResources"></div>
+      <button class="copy-btn" onclick="copyText('post3',this)">Copy Post ✦</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- PARTY INFO -->
+<div class="tab-content" id="tab-bundle">
+  <div class="section-header"><div class="num">🎂</div><h2>Party Particulars</h2></div>
+  <div class="card card-gold">
+    <div class="bundle-grid">
+      <div class="item"><div class="lbl">Waitlist Opens</div><div class="val">Mon 1 June 2026</div></div>
+      <div class="item"><div class="lbl">Party Opens</div><div class="val">Mon 15 June, 7am EST</div></div>
+      <div class="item"><div class="lbl">Party Closes</div><div class="val">Tue 30 June 2026</div></div>
+      <div class="item"><div class="lbl">Resources Until</div><div class="val">Wed 15 July 2026</div></div>
+      <div class="item"><div class="lbl">Regular Party Bag</div><div class="val">$0 — Free!</div></div>
+      <div class="item"><div class="lbl">VIP Party Bag Price</div><div class="val">$97</div></div>
+      <div class="item"><div class="lbl">Affiliate Commission</div><div class="val">60% = $58.20 / sale</div></div>
+    </div>
+  </div>
+
+  <div class="section-header"><div class="num">02</div><h2>The Two Party Bags</h2></div>
+  <div class="party-bags">
+    <div class="party-bag">
+      <div class="bag-type">Regular Party Bag</div>
+      <h3>Free for Everyone 🎁</h3>
+      <p>Packed with digital products valued between <strong>$10-$100 each</strong>. Free to claim for anyone who signs up.</p>
+      <div class="price">FREE</div>
+      <div class="coupon-note">Coupon code: <strong>BIRTHDAYBASH</strong> (if required for your product)</div>
+    </div>
+    <div class="party-bag vip">
+      <div class="bag-type">VIP Party Bag</div>
+      <h3>The Gold Ticket 👑</h3>
+      <p>Products valued at <strong>$100-$500 each</strong>. VIP buyers also get access to the Regular Party Bag.</p>
+      <div class="price">$97</div>
+      <div class="coupon-note">Coupon code: <strong>BIRTHDAYBASHVIP</strong> (if required for your product)</div>
+    </div>
+  </div>
+
+  <div class="section-header"><div class="num">03</div><h2>What's Required</h2></div>
+  <div class="card">
+    <p style="font-size:14.5px;line-height:1.8;color:#2A0E1A;">
+      Just <strong style="color:#E8457A;">ONE solo email</strong> to your full email list, anytime in June. That's it! 🎀<br><br>
+      Your affiliate link will automatically send traffic to the waitlist page (<strong>kyliekelly.com/bb-waitlist</strong>) until June 15, when it updates to the live party page. The same link works the whole time!<br><br>
+      Any extra promo you can do is genuinely appreciated and means the party reaches more brilliant women, which is a win for everyone.
+    </p>
+  </div>
+
+  <div class="section-header"><div class="num">04</div><h2>Questions?</h2></div>
+  <div class="card">
+    <p style="font-size:14px;line-height:1.8;color:rgba(42,14,26,0.7);">Reach out to Kylie directly at <strong style="color:#E8457A;">hello@kyliekelly.com</strong> and she's here to help! 💌</p>
+  </div>
+</div>
+
+<!-- CONTRIBUTORS -->
+<div class="tab-content" id="tab-contributors">
+  <div class="section-header"><div class="num">🎉</div><h2>Your Party Crew</h2></div>
+  <p class="section-intro">Confirmed contributors so far and more being added! Tag each other, shout each other out, and lift each other up 🎀 If someone's product speaks to your audience, give them a mention in your emails.</p>
+
+  <div class="contributor-card">
+    <div>
+      <div class="name">Dr. Mona Leboudy</div>
+      <div class="role">Intuitive Business Coach · theactionalchemy.com</div>
+      <div class="product-title">Regular: Discovery Calls That Convert</div>
+      <div class="product-desc">Feel confident, natural, and totally yourself on discovery calls and enrol the right clients with ease.</div>
+      <div style="margin-top:8px;">
+        <div class="product-title">VIP: From Discovery Calls to Lifelong Clients</div>
+        <div class="product-desc">Turn your calls into consistent sales with the follow-up system that leaves no money on the table.</div>
+      </div>
+    </div>
+    <div><span class="bag-tag regular">Regular</span><br><span class="bag-tag vip-tag">VIP</span></div>
+  </div>
+
+  <div class="contributor-card">
+    <div>
+      <div class="name">Nadine Nethery</div>
+      <div class="role">Customer Retention Architect · candocontent.com</div>
+      <div class="product-title">Regular: Screenshot Savvy</div>
+      <div class="product-desc">The mini training that makes raw customer feedback the centrepiece of your credibility-based marketing, boosting your authority, impact, and sales.</div>
+    </div>
+    <span class="bag-tag regular">Regular</span>
+  </div>
+
+  <div class="contributor-card">
+    <div>
+      <div class="name">Nadalie Bardo</div>
+      <div class="role">Your Pin Coach · yourpincoach.com</div>
+      <div class="product-title">Regular: Course Creator &amp; Coach Pin Templates</div>
+      <div class="product-desc">10 premium Pinterest Pin Templates designed for course creators and coaches to promote webinars, freebies, and programs and grow their audience with ease.</div>
+    </div>
+    <span class="bag-tag regular">Regular</span>
+  </div>
+
+  <div class="contributor-card">
+    <div>
+      <div class="name">Kristin Lawton</div>
+      <div class="role">Chief Brand Mixologist · districtbrandbar.com</div>
+      <div class="product-title">Regular: Signature Brand Shot</div>
+      <div class="product-desc">A quick, personalised homepage check pulled directly from your website so you can see exactly what you're serving at first glance.</div>
+    </div>
+    <span class="bag-tag regular">Regular</span>
+  </div>
+
+  <div class="contributor-card">
+    <div>
+      <div class="name">Julie C Butler</div>
+      <div class="role">Visibility + Collaboration Strategist · juliecbutler.com</div>
+      <div class="product-title">Regular: The Collab Partner Playbook</div>
+      <div class="product-desc">How to choose aligned opportunities, pitch naturally, and turn partnerships into consistent list growth without burnout or guesswork.</div>
+      <div style="margin-top:8px;">
+        <div class="product-title">VIP: The Virtual Summit Launch Toolkit</div>
+        <div class="product-desc">Your all-in-one, done-for-you toolkit for hosting a high-converting virtual summit with templates, guides, and strategies included.</div>
+      </div>
+    </div>
+    <div><span class="bag-tag regular">Regular</span><br><span class="bag-tag vip-tag">VIP</span></div>
+  </div>
+
+  <div class="contributor-card">
+    <div>
+      <div class="name">Daire Paddy</div>
+      <div class="role">Online Business Coach · dairepaddy.com</div>
+      <div class="product-title">Regular: Behind the Scenes of How I Create Content</div>
+      <div class="product-desc">A workshop showing how to turn a Notes app full of ideas into a prolific amount of content without living on your phone.</div>
+      <div style="margin-top:8px;">
+        <div class="product-title">VIP: Carousel Queen</div>
+        <div class="product-desc">A 30-day bootcamp for online baddies ready to turn scrolls into sales without staring at a blank screen for hours.</div>
+      </div>
+    </div>
+    <div><span class="bag-tag regular">Regular</span><br><span class="bag-tag vip-tag">VIP</span></div>
+  </div>
+
+  <div class="contributor-card">
+    <div>
+      <div class="name">Gabe Cox</div>
+      <div class="role">Goal Planning &amp; Business Strategist · redhotmindset.com</div>
+      <div class="product-title">Regular: Simplified Business Strategy</div>
+      <div class="product-desc">Create one central hub for everything in your life and business, build a year-at-a-glance strategy board, and build the habit of actually using it.</div>
+      <div style="margin-top:8px;">
+        <div class="product-title">VIP: Finish Line Goals</div>
+        <div class="product-desc">A personalised goal-planning system that works for the season you're in without sacrificing everything to achieve your goals.</div>
+      </div>
+    </div>
+    <div><span class="bag-tag regular">Regular</span><br><span class="bag-tag vip-tag">VIP</span></div>
+  </div>
+
+  <div class="contributor-card">
+    <div>
+      <div class="name">Tara Reid</div>
+      <div class="role">Business &amp; Marketing Strategist · thetarareid.com</div>
+      <div class="product-title">Regular: Business Gaps Custom GPT</div>
+      <div class="product-desc">A custom GPT that analyses your offers, funnel, content, and website, then creates a personalised Business Blueprint with a clear, realistic 90-day plan.</div>
+    </div>
+    <span class="bag-tag regular">Regular</span>
+  </div>
+
+  <div class="contributor-card">
+    <div>
+      <div class="name">Samantha Burmeister</div>
+      <div class="role">Sales Copywriter · nomadcopyagency.com</div>
+      <div class="product-title">Regular: Opt-In Copy Bot</div>
+      <div class="product-desc">Write your high-converting opt-in page in just a few minutes with this AI-powered copywriting tool.</div>
+      <div style="margin-top:8px;">
+        <div class="product-title">VIP: Every Launch Email You Need Checklist</div>
+        <div class="product-desc">40+ emails that every launch needs but most service providers forget to send. Organise and optimise your next launch.</div>
+      </div>
+    </div>
+    <div><span class="bag-tag regular">Regular</span><br><span class="bag-tag vip-tag">VIP</span></div>
+  </div>
+
+  <div class="contributor-card">
+    <div>
+      <div class="name">Nicole Batey</div>
+      <div class="role">Collab &amp; Events Strategist · fempreneuronline.com</div>
+      <div class="product-title">Regular: Bundle Ready in a Weekend</div>
+      <div class="product-desc">An AI-powered kit with Claude + ChatGPT optimisers that write your opt-in and tripwire copy specifically for cold bundle traffic, fast.</div>
+    </div>
+    <span class="bag-tag regular">Regular</span>
+  </div>
+
+  <p style="text-align:center;font-style:italic;color:#C9993A;margin-top:1.5rem;font-family:'Playfair Display',serif;font-size:15px;">More contributors being added soon! 🎉</p>
+</div>
+
+<!-- PARTY HAT -->
+<div class="tab-content" id="tab-hat">
+  <div class="section-header"><div class="num">🎩</div><h2>Party Hat Generator</h2></div>
+  <section class="hat-section">
+    <h2>Put a Party Hat On It ✨</h2>
+    <p class="intro">Want a fun, on-brand party image of yourself for your launch posts? Use this AI prompt with a clear photo of yourself in ChatGPT, Claude, Midjourney, or any AI image tool and then share on social with your affiliate link!</p>
+    <div class="hat-prompt" id="hat-prompt">Create a fun, celebratory digital illustration in a warm watercolour style.
+
+The image should feature me celebrating at a birthday party, cheerful, confident, and ready to party!
+
+I should have:
+- My own facial features (use the uploaded photo for reference)
+- A colourful, glittery party hat on my head
+- Holding a glass of champagne or a confetti popper
+- Confetti and balloons floating around in pink, gold, and multicolour
+- A warm, joyful expression
+
+Background: soft blush pink or white with gold confetti details, minimal and airy, leaving room for text overlay.
+
+Colour palette: pink (#E8457A), gold (#C9993A), and white, fun, feminine, professional.
+
+Overall tone: celebratory, warm, and professional, like a party invitation meets personal brand photo.
+
+Style Keywords: watercolour illustration, soft edges, warm colour palette, joyful energy, flattering realistic facial features, celebration vibes.
+
+Output: A square or portrait image, character centred, with negative space around for text overlay.</div>
+    <button class="copy-btn" onclick="copyText('hat-prompt',this)">Copy Prompt ✦</button>
+    <p style="margin-top:1.25rem;font-size:13px;color:rgba(42,14,26,0.65);line-height:1.7;">
+      <strong style="color:#C9993A;">How to use it:</strong><br>
+      1. Copy the prompt and 2. Open ChatGPT (DALL-E), Midjourney, or Claude and 3. Paste and upload a clear headshot and 4. Generate and pick your fave and 5. Add "Kylie's Birthday Bash" text in Canva and 6. Post with your affiliate link 🎈
+    </p>
+  </section>
+</div>
+
+<!-- CHECKLIST -->
+<div class="tab-content" id="tab-checklist">
+  <div class="section-header"><div class="num">✦</div><h2>Promo Checklist</h2></div>
+
+  <div class="checklist">
+    <h3>What's Required</h3>
+    <ul>
+      <li><strong>ONE solo email to your full email list, anytime June 1-29.</strong> That's it! Just one. It can be any of the email swipes, in your own voice, anytime during the party.</li>
+    </ul>
+  </div>
+
+  <div class="checklist">
+    <h3>🎁 Bonus Promo — Do More, Get More!</h3>
+    <ul>
+      <li>Any contributor who goes above and beyond the one required email with extra emails, social posts, or stories gets access to the <strong>VIP Party Bag</strong> as a thank you from Kylie 🎉</li>
+      <li>Send a waitlist RSVP email June 1-14 (Email 1 in your swipe file)</li>
+      <li>Send the party invitation email when doors open June 15 (Email 2)</li>
+      <li>Send an "almost over" reminder email June 26-29 (Email 3)</li>
+      <li>Send a final last-call email on June 30 (Email 4)</li>
+      <li>Resend any email to unopens for an easy extra lift in conversions</li>
+      <li>Share 1+ social posts — opening day or closing push works best</li>
+      <li>Share in Facebook groups, on Stories, or to your LinkedIn audience</li>
+      <li>Generate a party hat photo of yourself for your launch posts 🎩</li>
+      <li>Tag <strong>@kyliekelly</strong> in your posts so Kylie can reshare!</li>
+    </ul>
+  </div>
+
+  <div class="checklist">
+    <h3>Key Dates 📅</h3>
+    <ul>
+      <li>Submission deadline: <strong>31 May 2026</strong> (11:59pm EST)</li>
+      <li>Waitlist open: <strong>June 1</strong> — your link is live from day one!</li>
+      <li>Party opens: <strong>7am EST, June 15</strong> (your link auto-updates)</li>
+      <li>Party closes: <strong>11:59pm EST, June 30</strong></li>
+      <li>Resources available until: <strong>July 15, 2026</strong></li>
+      <li>Questions? Email Kylie: <strong>hello@kyliekelly.com</strong> 💌</li>
+    </ul>
+  </div>
+</div>
+
+<footer>
+  <p>Happy 41st, Kylie! Let's make it the best party yet 🎂✨</p>
+  <p class="small">Kylie's Birthday Bash · June 15-30, 2026 · Resources until July 15</p>
+</footer>
+
+</div>
+<script>
+(function(){
+  const hero = document.getElementById('hero');
+  if(!hero) return;
+  const colors = ['rgba(232,69,122,0.28)','rgba(201,153,58,0.35)','rgba(240,204,122,0.4)','rgba(196,32,96,0.2)','rgba(232,69,122,0.18)'];
+  for(let i=0;i<28;i++){
+    const dot = document.createElement('div');
+    dot.className = 'hero-dot';
+    const s = 4 + Math.random()*10;
+    dot.style.cssText = `width:${s}px;height:${s}px;left:${Math.random()*100}%;top:${Math.random()*100}%;background:${colors[i%colors.length]};`;
+    hero.appendChild(dot);
+  }
+})();
+
+function switchTab(id) {
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+  document.querySelector('.tab-btn[data-tab="'+id+'"]').classList.add('active');
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function generateSwipes() {
+  const signoff = document.getElementById('signoff').value.trim() || '[Your Name]';
+  const toolname = document.getElementById('toolname').value.trim() || '[YOUR CONTRIBUTION]';
+  const benefit = document.getElementById('benefit').value.trim() || '[one-line benefit]';
+  const afflink = document.getElementById('afflink').value.trim() || '[YOUR AFFILIATE LINK]';
+  const mergetag = document.getElementById('mergetag').value.trim() || '[FIRST NAME]';
+
+  document.querySelectorAll('.swipe-body,.post-body').forEach(el=>{
+    let t = el.dataset.template;
+    t = t.split('{{TOOLNAME}}').join(toolname);
+    t = t.split('{{BENEFIT}}').join(benefit);
+    t = t.split('{{AFFLINK}}').join(afflink);
+    t = t.split('{{MERGETAG}}').join(mergetag);
+    t = t.split('{{SIGNOFF}}').join(signoff);
+    t = t.replace(/\u2014/g, ' ');
+    t = t.replace(/\n{3,}/g,'\n\n');
+    el.textContent = t;
+  });
+
+  document.getElementById('success-name').textContent = signoff;
+  const out = document.getElementById('swipes-output');
+  out.classList.add('revealed');
+  launchConfetti();
+  setTimeout(()=>out.scrollIntoView({behavior:'smooth',block:'start'}),200);
+}
+
+function launchConfetti() {
+  const canvas = document.getElementById('confetti-canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.style.display = 'block';
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const colors = ['#E8457A','#C9993A','#F0CC7A','#C42060','#F5C8D8','#8B6914','#FFD700','#ffffff'];
+  const pieces = [];
+  for (let i=0;i<160;i++) {
+    pieces.push({
+      x:Math.random()*canvas.width,
+      y:Math.random()*-canvas.height*0.5,
+      w:6+Math.random()*8, h:4+Math.random()*5,
+      color:colors[Math.floor(Math.random()*colors.length)],
+      rot:Math.random()*Math.PI*2,
+      vx:(Math.random()-0.5)*2.5,
+      vy:2.5+Math.random()*3.5,
+      vr:(Math.random()-0.5)*0.18,
+      shape:Math.random()>0.5?'rect':'circle'
+    });
+  }
+  let frame=0; const maxFrames=210;
+  function draw() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pieces.forEach(p=>{
+      ctx.save();
+      ctx.translate(p.x,p.y);
+      ctx.rotate(p.rot);
+      ctx.globalAlpha=Math.max(0,1-(frame/maxFrames)*0.6);
+      ctx.fillStyle=p.color;
+      if(p.shape==='rect'){ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);}
+      else{ctx.beginPath();ctx.arc(0,0,p.w/2,0,Math.PI*2);ctx.fill();}
+      ctx.restore();
+      p.x+=p.vx; p.y+=p.vy; p.rot+=p.vr; p.vy+=0.06;
+    });
+    frame++;
+    if(frame<maxFrames){requestAnimationFrame(draw);}
+    else{ctx.clearRect(0,0,canvas.width,canvas.height);canvas.style.display='none';}
+  }
+  requestAnimationFrame(draw);
+}
+
+function copyText(id,btn) {
+  const text = document.getElementById(id).textContent;
+  const orig = btn.textContent;
+  navigator.clipboard.writeText(text).then(()=>{
+    btn.textContent='Copied!'; btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent=orig;btn.classList.remove('copied');},2200);
+  }).catch(()=>{
+    const t=document.createElement('textarea'); t.value=text;
+    document.body.appendChild(t); t.select(); document.execCommand('copy'); document.body.removeChild(t);
+    btn.textContent='Copied!'; btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent=orig;btn.classList.remove('copied');},2200);
+  });
+}
+</script>
+</body>
+</html>
